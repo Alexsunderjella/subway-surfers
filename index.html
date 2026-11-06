@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Subway Surfers 3D - Web Edition</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏃</text></svg>">
+  <link rel="stylesheet" href="style.css">
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+  <!-- 3D WebGL Canvas Container -->
+  <div id="canvas-container"></div>
+
+  <!-- In-Game HUD -->
+  <div id="hud">
+    <div class="hud-top">
+      <div class="hud-left">
+        <div class="hud-pill">
+          <div class="coin-icon">¢</div>
+          <span id="hud-coins" class="coin-val">0</span>
+        </div>
+        <div id="hud-multiplier" class="multiplier-pill">1X</div>
+        
+        <!-- Active Power-up Countdown Bars -->
+        <div id="hud-powerups"></div>
+      </div>
+
+      <div class="hud-right">
+        <div class="hud-controls-top">
+          <button id="btn-sound" class="hud-btn" title="Bật/Tắt âm thanh">🔊</button>
+          <button id="btn-pause" class="hud-btn" title="Tạm dừng">⏸</button>
+        </div>
+
+        <div class="score-box">
+          <div class="score-label">Score</div>
+          <div id="hud-score" class="score-val">000000</div>
+          <div class="highscore-tag">BEST: <span id="hud-highscore">000000</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Start Menu Modal -->
+  <div id="menu-screen" class="overlay">
+    <div class="modal-card">
+      <h1 class="game-title">SUBWAY<br>SURFERS</h1>
+      <p class="game-subtitle">3D Endless Runner</p>
+
+      <button id="btn-play" class="btn-primary">CHƠI NGAY</button>
+
+      <div class="controls-guide">
+        <div class="guide-title">HƯỚNG DẪN ĐIỀU KHIỂN</div>
+        <div class="guide-grid">
+          <div class="guide-item">
+            <span class="key-badge">A / ◀</span> Sang Trái
+          </div>
+          <div class="guide-item">
+            <span class="key-badge">D / ▶</span> Sang Phải
+          </div>
+          <div class="guide-item">
+            <span class="key-badge">W / ▲ / Space</span> Nhảy Lên
+          </div>
+          <div class="guide-item">
+            <span class="key-badge">S / ▼</span> Trượt Cúi Người
+          </div>
+        </div>
+        <div style="font-size: 12px; color: #94a3b8; margin-top: 6px;">
+          📱 Trên điện thoại/máy tính bảng: Vuốt màn hình Trái / Phải / Lên / Xuống
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pause Modal -->
+  <div id="pause-screen" class="overlay hidden">
+    <div class="modal-card">
+      <h2 class="game-title" style="font-size: 34px;">TẠM DỪNG</h2>
+      <p style="color: #cbd5e1; font-weight: 600;">Trò chơi đang dừng lại</p>
+      <button id="btn-resume" class="btn-primary">TIẾP TỤC</button>
+    </div>
+  </div>
+
+  <!-- Game Over Modal -->
+  <div id="gameover-screen" class="overlay hidden">
+    <div class="modal-card">
+      <h2 class="gameover-title">GAME OVER</h2>
+      <div id="new-best-badge" class="new-best-badge hidden">🎉 KỶ LỤC MỚI! 🎉</div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <span class="stat-title">Điểm Số</span>
+          <span id="final-score" class="stat-value">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-title">Tiền Vàng</span>
+          <span id="final-coins" class="stat-value gold">0</span>
+        </div>
+      </div>
+
+      <div style="font-size: 14px; font-weight: 700; color: #94a3b8;">
+        Kỷ lục cao nhất: <span id="final-highscore" style="color: #38bdf8;">0</span>
+      </div>
+
+      <button id="btn-restart" class="btn-primary">CHƠI LẠI</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/constants.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/world.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/obstacles.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
+
