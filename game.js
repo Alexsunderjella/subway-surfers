@@ -268,11 +268,33 @@ class SubwaySurfersGame {
       newBestBadge: document.getElementById('new-best-badge')
     };
 
-    // UI Click Events
-    if (this.dom.btnPlay) this.dom.btnPlay.addEventListener('click', () => this.startGame());
-    if (this.dom.btnRestart) this.dom.btnRestart.addEventListener('click', () => this.restartGame());
-    if (this.dom.btnResume) this.dom.btnResume.addEventListener('click', () => this.togglePause());
-    if (this.dom.btnPause) this.dom.btnPause.addEventListener('click', () => this.togglePause());
+    // UI Click & Touch Events
+    const handleStart = (e) => {
+      if (e) { e.preventDefault(); e.stopPropagation(); }
+      this.startGame();
+    };
+    if (this.dom.btnPlay) {
+      this.dom.btnPlay.addEventListener('click', handleStart);
+      this.dom.btnPlay.addEventListener('touchend', handleStart);
+    }
+
+    const handleRestart = (e) => {
+      if (e) { e.preventDefault(); e.stopPropagation(); }
+      this.restartGame();
+    };
+    if (this.dom.btnRestart) {
+      this.dom.btnRestart.addEventListener('click', handleRestart);
+      this.dom.btnRestart.addEventListener('touchend', handleRestart);
+    }
+
+    if (this.dom.btnResume) {
+      this.dom.btnResume.addEventListener('click', () => this.togglePause());
+      this.dom.btnResume.addEventListener('touchend', () => this.togglePause());
+    }
+    if (this.dom.btnPause) {
+      this.dom.btnPause.addEventListener('click', () => this.togglePause());
+      this.dom.btnPause.addEventListener('touchend', () => this.togglePause());
+    }
 
     if (this.dom.btnSound) {
       this.dom.btnSound.addEventListener('click', () => {
@@ -291,20 +313,26 @@ class SubwaySurfersGame {
 
   startGame() {
     this.state = 'PLAYING';
+    this.graceTimer = 2.5; // 2.5s invulnerability runway at start
     this.dom.menuScreen.classList.add('hidden');
+    this.dom.menuScreen.style.display = 'none';
     this.dom.gameoverScreen.classList.add('hidden');
+    this.dom.gameoverScreen.style.display = 'none';
     this.dom.pauseScreen.classList.add('hidden');
+    this.dom.pauseScreen.style.display = 'none';
     window.soundEngine.startBGM();
   }
 
   togglePause() {
     if (this.state === 'PLAYING') {
       this.state = 'PAUSED';
+      this.dom.pauseScreen.style.display = 'flex';
       this.dom.pauseScreen.classList.remove('hidden');
       window.soundEngine.stopBGM();
       window.soundEngine.stopJetpackSound();
     } else if (this.state === 'PAUSED') {
       this.state = 'PLAYING';
+      this.dom.pauseScreen.style.display = 'none';
       this.dom.pauseScreen.classList.add('hidden');
       this.clock.getDelta(); // Discard paused delta
       window.soundEngine.startBGM();
@@ -337,6 +365,7 @@ class SubwaySurfersGame {
         this.dom.newBestBadge.classList.add('hidden');
       }
 
+      this.dom.gameoverScreen.style.display = 'flex';
       this.dom.gameoverScreen.classList.remove('hidden');
     }, 750);
   }
@@ -349,12 +378,15 @@ class SubwaySurfersGame {
     this.multiplier = 1;
     this.activePowerups = {};
     this.cameraShake = 0;
+    this.graceTimer = 2.5;
 
     this.world.reset();
     this.player.reset();
     this.obstacles.reset();
 
     this.dom.powerupsContainer.innerHTML = '';
+    this.dom.gameoverScreen.style.display = 'none';
+    this.dom.menuScreen.style.display = 'none';
     this.updateHUD();
 
     this.startGame();
@@ -472,8 +504,13 @@ class SubwaySurfersGame {
         this.activatePowerup(pw);
       });
 
-      // 10. Check Lethal Obstacle Collisions (only if not flying with jetpack)
-      if (!this.activePowerups['jetpack'] && this.obstacles.checkObstacleCollision(this.player)) {
+      // Grace period timer countdown at game start
+      if (this.graceTimer > 0) {
+        this.graceTimer -= dt;
+      }
+
+      // 10. Check Lethal Obstacle Collisions (only if grace period expired and not flying with jetpack)
+      if (this.graceTimer <= 0 && !this.activePowerups['jetpack'] && this.obstacles.checkObstacleCollision(this.player)) {
         this.gameOver();
       }
 
@@ -540,6 +577,14 @@ class SubwaySurfersGame {
 }
 
 // Initialize when DOM is ready
-window.addEventListener('DOMContentLoaded', () => {
-  window.subwayGame = new SubwaySurfersGame();
-});
+function initGame() {
+  if (!window.subwayGame) {
+    window.subwayGame = new SubwaySurfersGame();
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initGame);
+} else {
+  initGame();
+}

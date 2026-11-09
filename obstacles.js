@@ -10,10 +10,16 @@ class ObstacleManager {
     this.trains = [];
     this.coins = [];
     this.powerups = [];
-    this.lastSpawnZ = -30;
+    this.lastSpawnZ = -80; // First obstacle spawns safely at -80m
 
     // Shared Geometries & Materials for high performance
     this.initAssets();
+    this.spawnRunwayCoins();
+  }
+
+  spawnRunwayCoins() {
+    // Welcoming runway of gold coins on the center lane for the first 4 seconds
+    this.createCoinLine(CONSTANTS.LANE_INDEX_CENTER, -12, 0.6, 14);
   }
 
   initAssets() {
@@ -155,19 +161,18 @@ class ObstacleManager {
         break;
 
       case 3:
-        // Pattern 3: Sequence of hurdles (low & high)
+        // Pattern 3: Sequence of hurdles with at least one completely clear lane
         {
-          this.createLowBarrier(0, z);
-          this.createCoinArc(0, z);
+          const clearLane = lanes[Math.floor(Math.random() * lanes.length)];
+          const otherLanes = lanes.filter(l => l !== clearLane);
 
-          this.createHighBarrier(1, z);
-          this.createCoinLine(1, z - 2, 0.45, 4);
+          this.createCoinLine(clearLane, z - 4, 0.6, 6);
 
-          if (Math.random() < 0.4) {
-            this.createLowBarrier(2, z);
-          } else {
-            this.createPowerup(2, z);
-          }
+          this.createLowBarrier(otherLanes[0], z);
+          this.createCoinArc(otherLanes[0], z);
+
+          this.createHighBarrier(otherLanes[1], z);
+          this.createCoinLine(otherLanes[1], z - 2, 0.45, 4);
         }
         break;
 
@@ -499,7 +504,8 @@ class ObstacleManager {
         // If player is running on ramp or safely on top of roof, no crash
         if (train.hasRamp) {
           const frontZ = train.mesh.position.z + train.length / 2;
-          if (player.z > frontZ - 0.5) {
+          const rampStart = frontZ + 5.5;
+          if (player.z <= rampStart + 0.5 && player.z >= frontZ - 1.2) {
             continue; // Safely climbing ramp
           }
         }
@@ -630,7 +636,8 @@ class ObstacleManager {
     this.obstacles = [];
     this.coins = [];
     this.powerups = [];
-    this.lastSpawnZ = -30;
+    this.lastSpawnZ = -80;
+    this.spawnRunwayCoins();
   }
 }
 

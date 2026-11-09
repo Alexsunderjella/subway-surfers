@@ -49,7 +49,7 @@
       <h1 class="game-title">SUBWAY<br>SURFERS</h1>
       <p class="game-subtitle">3D Endless Runner</p>
 
-      <button id="btn-play" class="btn-primary">CHƠI NGAY</button>
+      <button id="btn-play" class="btn-primary" onclick="if(window.subwayGame) window.subwayGame.startGame();">CHƠI NGAY</button>
 
       <div class="controls-guide">
         <div class="guide-title">HƯỚNG DẪN ĐIỀU KHIỂN</div>
@@ -79,7 +79,7 @@
     <div class="modal-card">
       <h2 class="game-title" style="font-size: 34px;">TẠM DỪNG</h2>
       <p style="color: #cbd5e1; font-weight: 600;">Trò chơi đang dừng lại</p>
-      <button id="btn-resume" class="btn-primary">TIẾP TỤC</button>
+      <button id="btn-resume" class="btn-primary" onclick="if(window.subwayGame) window.subwayGame.togglePause();">TIẾP TỤC</button>
     </div>
   </div>
 
@@ -104,17 +104,17 @@
         Kỷ lục cao nhất: <span id="final-highscore" style="color: #38bdf8;">0</span>
       </div>
 
-      <button id="btn-restart" class="btn-primary">CHƠI LẠI</button>
+      <button id="btn-restart" class="btn-primary" onclick="if(window.subwayGame) window.subwayGame.restartGame();">CHƠI LẠI</button>
     </div>
   </div>
 
   <!-- Scripts -->
-  <script src="./constants.js"></script>
-  <script src="./audio.js"></script>
-  <script src="./world.js"></script>
-  <script src="./player.js"></script>
-  <script src="./obstacles.js"></script>
-  <script src="./game.js"></script>
+  <script src="./constants.js?v=3"></script>
+  <script src="./audio.js?v=3"></script>
+  <script src="./world.js?v=3"></script>
+  <script src="./player.js?v=3"></script>
+  <script src="./obstacles.js?v=3"></script>
+  <script src="./game.js?v=3"></script>
 </body>
 </html>
 

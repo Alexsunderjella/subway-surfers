@@ -11,8 +11,8 @@ const CONSTANTS = {
   LANE_INDEX_RIGHT: 2,
 
   // Speed & Progression
-  INITIAL_SPEED: 26,
-  MAX_SPEED: 62,
+  INITIAL_SPEED: 22,
+  MAX_SPEED: 58,
   SPEED_INCREMENT: 0.35, // Speed added per 100 meters
   LANE_CHANGE_SPEED: 18, // Lerp speed for switching lanes
 
